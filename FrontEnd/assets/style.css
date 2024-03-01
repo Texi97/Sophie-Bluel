@@ -30,6 +30,7 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
 	line-height: 1;
+	background-color: #fffef8;
 }
 ol, ul {
 	list-style: none;
@@ -91,13 +92,19 @@ nav ul {
 
 }
 nav li {
-	padding: 0 10px;
+	padding: 0 22px;
 	font-size: 1.2em;
 }
 
-li:hover {
+li:hover, a:hover {
 	color: #B1663C;
 }
+
+nav a {
+	text-decoration: none;
+	color: #000000;
+}
+
 #introduction {
 	display: flex;
 	align-items: center;
@@ -184,5 +191,50 @@ footer nav ul {
 	display: flex;
 	justify-content: flex-end;
 	margin: 2em
+}
+
+.formulaire-login {
+	width: 50%;
+	margin: auto;
+	margin-top: 150px;
+	margin-bottom: 355px;
+}
+
+.formulaire-login h2 {
+	text-align: center;
+}
+
+.formulaire-login p {
+	text-align: center;
+	color: #3D3D3D;
+	font-size: 14px;
+	font-weight: 500;
+	text-decoration-line: underline;
+	cursor: pointer;
+}
+
+.formulaire-connexion {
+	display: flex;
+	flex-direction: column;
+	text-align: left;
+	margin-top: 10px;
+}
+
+.formulaire-connexion label {
+	margin-bottom: 10px;
+	margin-top: 30px;
+}
+
+.formulaire-connexion input {
+	height: 50px;
+	font-size: 1.2 rem;
+	box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0,09);
+	border: none;
+}
+
+.formulaire-connexion #submit {
+	height: 36px;
+	font-size: 14px;
+	margin-top: 37px;
 }
 
