@@ -157,4 +157,30 @@ document.addEventListener("DOMContentLoaded", async () => {
     } else {
         loginLink.innerText = "login";
     }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const token = sessionStorage.getItem("token");
+        const loginLink = document.getElementById("loginLink");
+    
+        if (token) {
+            // Utilisateur connecte
+            const logoutLink = document.createElement("a");
+            logoutLink.innerText = "logout";
+            logoutLink.href = "javascript:void(0);";
+            logoutLink.addEventListener("click", () => {
+                // Deconnexion : Supprime le token du sessionStorage
+                sessionStorage.removeItem("token");
+                // Rediriger vers la page de connexion
+                location.href = "login.html";
+            });
+            
+            // Remplacer le lien "login" par "logout"
+            loginLink.parentNode.replaceChild(logoutLink, loginLink);
+        } else {
+            // Utilisateur non connecté
+            loginLink.innerText = "login";
+            loginLink.href = "login.html"; // Rediriger vers la page de connexion
+        }
+    });
+
 });
