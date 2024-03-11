@@ -16,7 +16,7 @@
 	<h1>Sophie Bluel <span>Architecte d'intérieur</span></h1>
 	<nav>
 		<ul>
-            <li><a href="index.html">projets</a></li>
+			<li><a href="index.html">projets</a></li>
 			<li>contact</li>
 			<li class="login">login</li>
 			<li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
@@ -24,17 +24,18 @@
 	</nav>
 </header>
 <main>
-	<section class="formulaire-login">
-		<h2>Log in</h2>
-		<form class="formulaire-connexion" action="#" method="get">
-			<label for="mail">E-mail</label>
-            <input type="email" id="mail" name="E-mail" required>
-			<span class="error-mail">Vérifiez l'adresse mail saisie !</span>
-            <label for="password">Mot de passe</label>
-            <input type="password" id="password" name="password" required>
-			<span class="error-password">Oups ! Mot de passe incorrect !</span>
-            <input type="submit" value="Se connecter" class="submit-disabled" id="submit">
+	<section class="formulary-login">
+		<h2>Log In</h2>
+		<form class="formulary-form" action="#" method="get">
+			<label for="email">E-mail</label>
+			<input type="email" name="email" id="email" required>
+			<span class="error-mail">Oups ! Adresse mail incorrecte !</span>
+			<label for="email">Mot de passe</label>
+			<input type="password" name="password" id="password" required>
+			<span class="error-password">Votre mot de passe est incorrect !</span>
+			<input type="submit" value="Se connecter" id="submit">
 		</form>
+		<p>Mot de passe oublié</p>
 	</section>
 </main>
 

@@ -225,10 +225,50 @@ nav a {
 	margin-bottom: 0.5em;
 }
 
+#portfolio {
+	position: relative;
+}
+
 #portfolio h2 {
 	text-align: center;
 	margin-bottom: 1em;
 }
+
+/* CSS rajoute a la page d'accueil */
+.edit-mode {
+	background-color: black;
+	height: 59px;
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+	justify-content: center;
+	align-items: center;
+	color: white;
+	font-size: 16px;
+	display: none;
+}
+
+.edit-mode svg {
+	width: 15px;
+}
+
+.edit-works {
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+	font-size: 16px;
+	align-items: baseline;
+	justify-content: center;
+	position: absolute;
+	top: 9px;
+	right: 350px;
+	display: none;
+}
+
+.edit-works svg {
+	width: 15px;
+}
+
 
 .gallery {
 	width: 100%;
@@ -249,6 +289,35 @@ nav a {
 	text-wrap: nowrap;
 	margin-top: 5px;
 }
+
+.categories {
+	display: flex;
+	flex-direction: row;
+	gap: 10px;
+	justify-content: center;
+	margin-bottom: 30px;
+}
+
+.btn-category {
+	color: #1D6154;
+	border: 1px solid #1D6154;
+	border-radius: 60px;
+	height: 37px;
+	font-size: 16px;
+	font-weight: 700;
+	text-align: center;
+	font-family: 'Syne', sans-serif;
+	background-color: #fffef8;
+	padding: 0px 15px;
+	cursor: pointer;
+	display: inline;
+}
+
+.category-selected {
+	background-color: #1D6154;
+	color: #fffef8;
+}
+
 
 #contact {
 	width: 50%;
@@ -302,4 +371,80 @@ footer nav ul {
 	display: flex;
 	justify-content: flex-end;
 	margin: 2em
+}
+
+/* CSS rajoute a la page de connexion */
+
+.login{
+	font-weight: 600;
+}
+
+.formulary-login{
+	width: 50%;
+	margin: auto;
+	margin-top: 150px;
+	margin-bottom: 270px;
+}
+
+.formulary-login h2{
+	text-align: center;
+}
+
+.formulary-form{
+	text-align: left;
+	display: flex;
+	flex-direction: column;
+	margin-top: px;
+}
+
+.formulary-form label{
+	margin-bottom: 7px;
+	margin-top: 30px;
+}
+
+.formulary-form input {
+	height: 50px;
+	font-size: 1.2rem;
+	box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.09);
+	border: none;
+}
+
+.formulary-form #submit{
+	height: 36px;
+	font-size: 14px;
+	margin-top: 37px;
+}
+
+.formulary-login p {
+	text-align: center;
+	text-decoration-line: underline;
+	cursor: pointer;
+	color: #3D3D3D;
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.submit-disabled{
+	font-family: 'Syne';
+	font-weight: 700;
+	color: white;
+	background-color: rgb(168, 168, 168);
+	margin : 2em auto ;
+	width: 180px;
+	text-align: center;
+	border-radius: 60px ;
+}
+
+.error-mail {
+	color: red;
+	font-weight: 700;
+	margin-top: 6px;
+	display: none;
+}
+
+.error-password {
+	color: red;
+	font-weight: 700;
+	margin-top: 6px;
+	display: none;
 }
