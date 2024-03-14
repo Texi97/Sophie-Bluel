@@ -4,7 +4,7 @@ let works = [];
 let categories = [];
 let createWorksCalled = false; //Variable qui suit l'etat de createWorks()
 const ModalContentGallery = document.querySelector(".gallery-list");
-
+const messagePhotoDeleted = document.querySelector(".message-deleted");
 
 
 // Recuperer de maniere dynamique les projets
@@ -164,7 +164,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.addEventListener("DOMContentLoaded", () => {
         const token = sessionStorage.getItem("token");
         const loginLink = document.getElementById("loginLink");
-    
+
         if (token) {
             // Utilisateur connecte
             const logoutLink = document.createElement("a");
@@ -176,7 +176,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 // Rediriger vers la page de connexion
                 location.href = "login.html";
             });
-            
+
             // Remplacer le lien "login" par "logout"
             loginLink.parentNode.replaceChild(logoutLink, loginLink);
         } else {
@@ -191,12 +191,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 let modal = null
 
 const openModal = function (e) {
-    e.preventDefault ()
+    e.preventDefault()
     const target = document.querySelector(e.target.getAttribute("href"))
     target.style.display = null;
     target.removeAttribute("aria-hidden")
     target.setAttribute("aria-modal", "true")
-    modal =target
+    modal = target
     modal.addEventListener("click", closeModal)
     modal.querySelector(".js-close-modal").addEventListener("click", closeModal)
     modal.querySelector(".js-close-stop").addEventListener("click", stopPropagation)
@@ -225,10 +225,9 @@ document.querySelectorAll(".js-modale").forEach(a => {
 })
 
 
-//Fonction de creer un nouveau projet dans la modale
-function createWorksModal() {
-
-    //Vider la galerie avant d'ajouter les nouveaux projets
+// Fonction pour creer le contenu de la modale
+function displayWorksFirstModal() {
+    // Reinitialiser le contenu existant
     ModalContentGallery.innerHTML = "";
 
     //Ajouter des elements pour chaque projet filtre
@@ -241,8 +240,58 @@ function createWorksModal() {
         const imgFigureModal = document.createElement("img");
         imgFigureModal.src = work.imageUrl;
         imgFigureModal.setAttribute("class", "modal-img");
-        
+
         // Ajouter les éléments à la galerie. Des div dans .gallery, work.img et work.title dans la div
         ModalContentGallery.appendChild(figureModal);
         figureModal.appendChild(imgFigureModal);
-    })};
+
+        // Ajouter l'icône de suppression
+        const trashIcon = `<i class="fa-solid fa-trash-can delete-work" id = "trash-${work.id}"></i>`
+        figureModal.insertAdjacentHTML("afterbegin", trashIcon);
+
+        // Supprimer un work au click sur trashIcon
+        document.querySelectorAll(".delete-work").forEach(element => {
+            element.addEventListener("click", async (event) => {
+                await deleteWork(event.target.dataset.id);
+                // Regenerer l'affichage des projets sur la page admin et sur sa modal
+                await displayWorksFirstModal()
+            });
+        });
+    });
+};
+
+// Foncion de suppression d'un work
+function deleteWork(id) {
+    fetch(`http://localhost:5678/api/works/${id}`, {
+        method: "DELETE",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + sessionStorage.getItem("token")
+        },
+        body: null  
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw Error(`${response.status}`);
+        }
+    })
+    .then(() => {
+        /**Filters the works table for deletion and updating of the latter */
+        works = works.filter(work => work.id !== id);
+
+        /**Remove image from modal */
+        displayWorksFirstModal();
+        
+        /**Displays message for 1.5 second */
+        messagePhotoDeleted.style.display="flex";
+        setTimeout(()=>{
+            messagePhotoDeleted.style.display="none";
+        }, 1500);
+
+        /**Delete image from gallery */
+        createWorks();
+    })
+    .catch(error => alert("Erreur : " + error));
+};
+

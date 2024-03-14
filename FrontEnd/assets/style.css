@@ -342,6 +342,8 @@ nav a {
 	max-width: cacl(100vw - 20px);
 	max-height: calc (100vh - 20px);
 	border-radius: 10px;
+	display: flex;
+	flex-direction: column;
 }
 
 @keyframes fadeIn {
@@ -354,9 +356,20 @@ nav a {
 	justify-content: end;
 }
 
-.close svg {
+.js-close-modal {
 	cursor: pointer;
-	width: 12px;
+}
+
+.delete-work {
+	position: absolute;
+	right: 4px;
+	top: 4px;
+	color: white;
+	padding: 4px;
+	background-color: black;
+	border-radius: 2px;
+	font-size: 10px;
+	cursor: pointer;
 }
 
 .title-modal {
@@ -364,7 +377,44 @@ nav a {
 	font-size: 26px;
 	font-weight: 400;
 	text-align: center;
+	padding-top: 20px;
 }
+
+.gallery-list {
+	display: grid;
+	grid-template-columns: repeat(5, 1fr);
+	gap: 25px 5px;
+	padding-bottom: 60px;
+	margin: 46px 79px 40px 100px;
+	border-bottom: 1px #b3b3b3 solid;
+}
+
+.modal-img {
+	width: 78px;
+	height: 104px;
+	object-fit: cover;
+}
+
+.figure-modal {
+	position: relative;
+}
+
+.add-photo {
+	border: none;
+	background-color: #1D6154;
+	height: 36px;
+	width: 237px;
+	border-radius: 60px;
+	color: white;
+	font-family: "syne", sans-serif;
+	font-size: 14px;
+	font-weight: 700;
+	cursor: pointer;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 20px;
+}
+
 
 #contact {
 	width: 50%;
