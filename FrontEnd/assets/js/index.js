@@ -1,4 +1,5 @@
-// Variables
+// > VARIABLES
+
 const gallery = document.querySelector(".gallery");
 let works = [];
 let categories = [];
@@ -6,8 +7,26 @@ let createWorksCalled = false; //Variable qui suit l'etat de createWorks()
 const ModalContentGallery = document.querySelector(".gallery-list");
 const messagePhotoDeleted = document.querySelector(".message-deleted");
 
+const firstModal = document.querySelector(".modal-deleted");
+const addModal = document.querySelector(".modal-add");
 
-// Recuperer de maniere dynamique les projets
+const btnValidAddModal = document.getElementById("btn-valid");
+const formPhoto = document.querySelector(".form-photo");
+
+const btnAddFile = document.getElementById("file");
+const titleAddModal = document.getElementById("title-photo");
+const categorieAddModal = document.getElementById("categorie-photo");
+
+const previewNewPhoto = document.querySelector(".preview");
+/**Access to photo  add content */
+const contentAddPhoto = document.querySelector(".content-add-photo");
+
+
+
+
+
+// > Récupérer de manière dynamique les projets
+
 fetch("http://localhost:5678/api/works")
     .then(response => {
         if (!response.ok) {
@@ -21,7 +40,8 @@ fetch("http://localhost:5678/api/works")
     })
     .catch(error => alert("Erreur : " + error))
 
-//Recuperer de maniere dynamique les categories
+// > Récupérer de manière dynamique les catégories
+
 fetch("http://localhost:5678/api/categories")
     .then(response => {
         if (!response.ok) {
@@ -35,7 +55,9 @@ fetch("http://localhost:5678/api/categories")
     })
     .catch(error => alert("Erreur : " + error))
 
-//Fonction de creer un nouveau projet
+// * GALLERIE
+// > Fonction pour créer un nouveau projet
+
 function createWorks(categoryId = 0) {
 
     //Filtrer les categories des projets
@@ -69,7 +91,9 @@ function createWorks(categoryId = 0) {
     });
 }
 
-//Ajouter des categories de filtres pour ensuite filtrer les projets
+// * FILTRES
+// > Ajouter des catégories de filtre pour filtrer les projets
+
 function createFilter() {
     //Ajouter une categorie par defaut
     categories.unshift({ id: 0, name: "Tous" });
@@ -117,7 +141,8 @@ function createFilter() {
     });
 };
 
-//Promesse pour attendre la creation des categories avant de masquer les elements
+// > Promesse pour attendre la création des catégories avant de masquer les éléments
+
 function waitForCategories() {
     return new Promise((resolve, reject) => {
         const interval = setInterval(() => {
@@ -129,7 +154,9 @@ function waitForCategories() {
     });
 }
 
-//Pour afficher ou masquer des elements lorsque l'utilisateur est connecte
+// * UTILISATEUR CONNECTÉ
+// > Conditions pour afficher ou masquer des éléments lorsque l'utilisateur est connecté
+
 document.addEventListener("DOMContentLoaded", async () => {
     //Verifier que le token est bien stocke dans sessionStorage
     const token = sessionStorage.getItem("token");
@@ -190,6 +217,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 let modal = null
 
+// * MODALE N°1
+// > Fonction pour ouvrir la 1ère modale
+
 const openModal = function (e) {
     e.preventDefault()
     const target = document.querySelector(e.target.getAttribute("href"))
@@ -204,6 +234,8 @@ const openModal = function (e) {
     displayWorksFirstModal();
 }
 
+// > Fonction pour fermer la 1ère modale
+
 const closeModal = function (e) {
     if (modal === null) return
     e.preventDefault()
@@ -214,7 +246,11 @@ const closeModal = function (e) {
     modal.querySelector(".js-close-modal").removeEventListener("click", closeModal)
     modal.querySelector(".js-close-stop").removeEventListener("click", stopPropagation)
     modal = null
+    // Appel de al fonction qui reinitialise les photos dans l'ajout 
+    resetAddModal();
 }
+
+// > Pour que l'élément ne se ferme pas lorsque l'on clique dessus
 
 const stopPropagation = function (e) {
     e.stopPropagation()
@@ -225,7 +261,8 @@ document.querySelectorAll(".js-modale").forEach(a => {
 })
 
 
-// Fonction pour creer le contenu de la modale
+// > Fonction pour créer le contenu de la 1ère modale
+
 function displayWorksFirstModal() {
     // Reinitialiser le contenu existant
     ModalContentGallery.innerHTML = "";
@@ -248,19 +285,15 @@ function displayWorksFirstModal() {
         // Ajouter l'icône de suppression
         const trashIcon = `<i class="fa-solid fa-trash-can delete-work" id = "trash-${work.id}"></i>`
         figureModal.insertAdjacentHTML("afterbegin", trashIcon);
-
-        // Supprimer un work au click sur trashIcon
-        document.querySelectorAll(".delete-work").forEach(element => {
-            element.addEventListener("click", async (event) => {
-                await deleteWork(event.target.dataset.id);
-                // Regenerer l'affichage des projets sur la page admin et sur sa modal
-                await displayWorksFirstModal()
-            });
-        });
+        document.getElementById(`trash-${work.id}`).addEventListener("click", async (event) => {
+                await deleteWork(work.id); 
+            }); 
     });
 };
 
-// Foncion de suppression d'un work
+// * SUPPRESSION WORK
+// > Fonction pour supprimer un projet
+
 function deleteWork(id) {
     fetch(`http://localhost:5678/api/works/${id}`, {
         method: "DELETE",
@@ -277,21 +310,218 @@ function deleteWork(id) {
         }
     })
     .then(() => {
-        /**Filters the works table for deletion and updating of the latter */
+        
         works = works.filter(work => work.id !== id);
 
-        /**Remove image from modal */
+        // Supprimer l'image de la modale
         displayWorksFirstModal();
         
-        /**Displays message for 1.5 second */
+        // Afficher le message pendatn 1.5 secondes
         messagePhotoDeleted.style.display="flex";
         setTimeout(()=>{
             messagePhotoDeleted.style.display="none";
         }, 1500);
 
-        /**Delete image from gallery */
+        // Supprimer l'image de la gallery
         createWorks();
     })
     .catch(error => alert("Erreur : " + error));
 };
 
+// * MODALE N°2
+// > Fonction pour ouvrir la 2ème modale (ajout d'un projet)
+
+const btnAddPhoto = document.querySelector(".add-photo");
+btnAddPhoto.addEventListener("click", openAddModal);
+
+function openAddModal (event) {
+    if (event) {
+    event.preventDefault();
+    }
+        // Cacher la première modale et faire apparaître la seconde
+        firstModal.style.display = "none";
+        addModal.style.display = "flex";
+
+        //Appel de closeModal et stopPropagation pour fermer la modale sauf quand on clique sur elle
+        const closeCrossBtn = document.querySelector(".close-add");
+        closeCrossBtn.addEventListener("click", closeModal);
+        addModal.addEventListener("click", stopPropagation);
+
+        // Activer le bouton de retour à la première modale
+        const returnModalIcon = document.querySelector(".return");
+        returnModalIcon.addEventListener("click", returnFirstModal);
+
+    // Appel de la fonction qui ajoute le choix de la categorie
+    addSelectedCategories();
+};
+
+// > Fonction pour retourner à la première modale
+
+function returnFirstModal() {
+    // Cacher la modale d'ajout et faire reapparaitre la premiere modale
+    addModal.style.display = "none";
+    firstModal.style.display = "flex";
+
+    // Appel de la fonction qui reinitialise la photo d'ajout 
+    resetAddModal();
+};
+
+// > Fonction pour ajouter plusieurs catégories
+
+function addSelectedCategories() {
+    // Enlever le choix de la categorie "Tous"
+    categories.shift();
+
+    // Boucle pour chaque pour ajouter toutes les categories dans le champ de selection
+    categories.forEach(category => {
+        const categoryWork = document.createElement("option");
+        categoryWork.setAttribute("value", category.id);
+        categoryWork.setAttribute("name", category.name);
+        categoryWork.innerText = category.name;
+        categorieAddModal.appendChild(categoryWork);
+    });
+};
+
+// > Fonction pour ajouter un nouveau projet
+
+// Fonction pour avoir une photo
+function getNewPhoto() {
+
+    // Constante pour recuperer le premier fichier selectionne, "this" fait reference au btn "input type : file"
+    const selectedNewPhoto = btnAddFile.files[0];
+
+    // Taille requise, 4mo
+    const sizeFileMax = 4 * 1024 * 1024;
+
+    //Type de fichier requis
+    const typeFile = ["image/jpg", "image/png"];
+
+    // Verification de la taille de la photo
+    if(selectedNewPhoto.size > sizeFileMax) {
+        alert("Votre fichier dépasse 4 Mo.")
+        // Verification du type de fichier
+    } else if(!typeFile.includes(selectedNewPhoto.type)) {
+        alert("Seuls les fichiers de type jpg ou png sont acceptés.")
+    } else {
+        // Cacher le contenu de la photo
+        contentAddPhoto.style.display = "none";
+
+    // Creer une nouvelle image
+    let newPhoto = document.createElement("img");
+
+    // Ajouter la source de la photo en utilisant l'url creee
+    newPhoto.src = URL.createObjectURL(selectedNewPhoto);
+    // Ajouter une classe et changer la taille de l'image pour la mettre dans l'element parent
+    newPhoto.classList.add("new-photo");
+    newPhoto.style.height = "169px";
+    // Ajouter une nouvelle image a la <div> previewNewPhoto
+    previewNewPhoto.appendChild(newPhoto);
+
+    newPhoto.addEventListener("click", () => {
+        // Changer la photo en cliquant dessus
+        btnAddFile.click();
+        // Appeler la fonction qui reinitialise la photo dans la nouvelle modale
+        resetAddModal();
+    });
+    };
+};
+
+// Bouton de validation inactif 
+function setBtnState(disabled) {
+    btnValidAddModal.disabled = disabled;
+    btnValidAddModal.style.cursor = disabled ? "not-allowed" : "pointer";
+    btnValidAddModal.style.backgroundColor = disabled ? "grey" : "#1D6154";
+};
+setBtnState(true);
+
+// Changer l'etat du bouton si tout est reuni pour ajouter un fichier
+function toggleSubmitBtn() {
+    const photoAdded = document.querySelector(".new-photo");
+
+    // Verifier si le titre, la categorie et la photo remplissent les conditions pour changer l'etat du bouton
+    if (!(titleAddModal.value && categorieAddModal.value && photoAdded !== null)) {
+        // Laisser le bouton en inactif
+        setBtnState(true);
+    } else {
+        // Activer le bouton si toutes les conditions sont reunies
+       setBtnState(false);
+    };
+};
+
+// > Fonction pour réinitialiser le contenu de la modale n°2
+
+function resetAddModal () {
+    // Reinitialise le titre, categorie, l'image et le bouton d'ajout
+    previewNewPhoto.innerHTML = "";
+    titleAddModal.value = "";
+    categorieAddModal.value = "";
+    btnAddFile.value = "";
+
+    contentAddPhoto.style.display = "flex";
+    
+    // Reinitialise le bouton de validation
+    toggleSubmitBtn();
+};
+
+
+        /**POST API */
+
+/**Function to POST a photo to the API */
+function postNewPhoto () {
+    /**Creating a formData object to send form data to the add modal */
+    const formData = new FormData();
+
+    /**Adding values ​​to formData */
+    formData.append("title", titleAddModal.value);
+    formData.append("category", categorieAddModal.value);
+    formData.append("image", btnAddFile.files[0])
+
+    // console.log("Données envoyées:", {
+    //     title: titleAddModal.value,
+    //     category : categorieAddModal.value,
+    //     image: btnAddFile.files[0]
+    // });
+
+    /**Sending to the API */
+    fetch("http://localhost:5678/api/works", {
+        method: "POST", 
+        headers: {
+            "Authorization": "Bearer " + sessionStorage.getItem("token")
+        },
+        body: formData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw Error(`${response.status}`)
+        }
+        return response.json();
+
+    })
+    .then((galleryData) => {
+        /**Updating the gallery and closing the modal */
+        works.push(galleryData);
+        createWorks();
+        closeModal();
+    })
+    .catch(error => alert("Erreur : " + error));
+};
+
+/* ****************************** */
+/* DECLARATION OF EVENT LISTENERS */
+/* ****************************** */
+
+/**EventListener for sending the new form */
+formPhoto.addEventListener("submit", function (e) {
+    e.preventDefault();
+    postNewPhoto();
+});
+
+/**EventListener to recover the photo from the computer files */
+btnAddFile.addEventListener("change", getNewPhoto);
+
+/**EventListener to disable the validation button of the add modal */
+titleAddModal.addEventListener("input", toggleSubmitBtn);
+categorieAddModal.addEventListener("input", toggleSubmitBtn);
+btnAddFile.addEventListener("change", toggleSubmitBtn);
+
+/***************************************************************************** */

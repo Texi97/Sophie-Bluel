@@ -47,7 +47,7 @@
 			<a href="#modale" class="js-modale">modifier</a>
 			
 			<aside id="modale" class="modale" aria-hidden="true" role="dialog" aria-labelledby="titleModale" style="display: none;" >
-				<div class="modale-wrapper js-close-stop">
+				<div class="modale-wrapper js-close-stop modal-deleted">
 					<div class="close">
 						<i class="fa-solid fa-xmark js-close-modal"></i>
 					</div>
@@ -56,6 +56,38 @@
 					</div>
 					<p class="message-deleted">Photo supprimée</p>
 					<button class="add-photo">Ajouter une photo</button>
+				</div>
+
+				<div class="modale-wrapper js-close-stop modal-add">
+					<div class="return-and-close">
+						<i class="return fa-solid fa-arrow-left"></i>
+						<i class="close-add fa-solid fa-xmark"></i>
+					</div>
+					<h3 class="title-modal">Ajout photo</h3>
+					<form class="form-photo" action="#" method="post">
+						<div class="add-new-photo">
+							<div class="content-add-photo">
+								<i class="picture fa-regular fa-image"></i>
+								<label class="btn-add-new-photo" for="file">+ Ajouter photo</label>
+								<input 
+									id="file" 
+									type="file" 
+									name="file" 
+									accept="image/png, image/jpeg">
+								<p class="type-file">jpg, png : 4mo max</p>
+							</div>
+							<div class="preview"></div>
+						</div>
+						<div class="title-categorie">
+							<label for="title-photo">Titre</label>
+							<input type="text" id="title-photo" name="title-photo" required>
+							<label for="categorie-photo">Catégorie</label>
+							<select id="categorie-photo" name="categorie-photo" required>
+								<option value="">Choisissez une catégorie</option>
+							</select>
+						</div>
+						<input type="submit" id="btn-valid" value="Valider">
+					</form>
 				</div>
 			</aside>
 
