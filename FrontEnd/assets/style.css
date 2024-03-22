@@ -235,7 +235,7 @@ nav a {
 }
 
 /* CSS rajoute a la page d'accueil */
-.edit-mode {
+/* .edit-mode {
 	background-color: black;
 	height: 59px;
 	display: flex;
@@ -250,6 +250,47 @@ nav a {
 
 .edit-mode svg {
 	width: 15px;
+} */
+
+.edit-mode {
+	width: 100%;
+	height: 59px;
+	background-color: #000000;
+	color: #ffffff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+
+.logo-edit {
+	width: 15px;
+	height: 15px;
+	color: white;
+}
+
+.edit-projets {
+	display: flex;
+	justify-content: center;
+	gap: 31px;
+	height: 30px;
+	margin-bottom: 60px;
+}
+
+.edit {
+	display: flex;
+	gap: 11px;
+	align-items: center;
+	color: #000000;
+	/* text-decoration: none; */
+	cursor: pointer;
+}
+
+.edit i {
+font-size: 15px;
 }
 
 .edit-works {

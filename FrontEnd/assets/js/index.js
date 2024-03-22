@@ -21,6 +21,12 @@ const previewNewPhoto = document.querySelector(".preview");
 /**Access to photo  add content */
 const contentAddPhoto = document.querySelector(".content-add-photo");
 
+const switchLogout = document.querySelector('li a[href="login.html"]');
+const header = document.querySelector("header");
+const titlemyProjets = document.querySelector("#portfolio h2");
+
+
+
 
 
 
@@ -52,6 +58,7 @@ fetch("http://localhost:5678/api/categories")
     .then(categoriesData => {
         categories = categoriesData;
         createFilter();
+        adminMode();
     })
     .catch(error => alert("Erreur : " + error))
 
@@ -141,6 +148,62 @@ function createFilter() {
     });
 };
 
+// todo TEST ADMIN MODE
+
+/**Function to enable administrator mode */
+function adminMode(){
+    /**Check if a token is present in the sessionStorage */
+    if(sessionStorage.getItem("token")){
+        /**Create <div> edit mode content and insert at the beginning of the header */
+        const editModeBar = `<div class="edit-mode">
+        <i class="logo-edit fa-regular fa-pen-to-square"></i>
+        <p>Mode édition</p>
+        </div>`;
+        header.style.marginTop = "88px";
+        header.insertAdjacentHTML("afterbegin", editModeBar);
+        
+        /**change login text to switchLogout text */
+        switchLogout.textContent = "logout";
+        switchLogout.href = "#";
+        
+        switchLogout.addEventListener("click", () => {
+            /**Delete the session token and reload the page */
+            sessionStorage.removeItem("token");
+            location.reload();
+        });
+        /**Create a <div> container for toModified and title "Mes Projets"  */
+        const containerDivBtn = document.createElement("div");
+        containerDivBtn.classList.add("edit-projets");
+        /**Create the <di> link to edit projects */
+        const btnToModified = `<div class="edit">
+        <i class="fa-regular fa-pen-to-square"></i>
+        <p>modifier</p>
+        </div>`;
+
+        /**Insert container before first portfolio item and move projects inside */
+        portfolio.insertBefore(containerDivBtn, portfolio.firstChild);
+        containerDivBtn.appendChild(titlemyProjets);
+        /**Insert edit link after projects */
+        titlemyProjets.insertAdjacentHTML("afterend", btnToModified);
+
+        
+        /**Hide category buttons */
+        const categoriesButtonsFilter = document.querySelectorAll('.category-btn');
+        categoriesButtonsFilter.forEach(button => {
+            button.style.display = 'none';
+        });
+
+        /**Acces to "modifier" */
+        const editBtn = document.querySelector(".edit");
+        if (editBtn) {
+            /**If the element is found, add an event listener for the click */
+            editBtn.addEventListener("click", openModal);
+        };
+    };
+};
+
+// todo FIN TEST ADMIN MODE
+
 // > Promesse pour attendre la création des catégories avant de masquer les éléments
 
 function waitForCategories() {
@@ -222,14 +285,15 @@ let modal = null
 
 const openModal = function (e) {
     e.preventDefault()
-    const target = document.querySelector(e.target.getAttribute("href"))
-    target.style.display = null;
-    target.removeAttribute("aria-hidden")
-    target.setAttribute("aria-modal", "true")
-    modal = target
-    modal.addEventListener("click", closeModal)
-    modal.querySelector(".js-close-modal").addEventListener("click", closeModal)
-    modal.querySelector(".js-close-stop").addEventListener("click", stopPropagation)
+    // const target = document.querySelector(e.target.getAttribute("href"))
+    modale = document.querySelector(".modale");
+    modale.style.display = null;
+    modale.removeAttribute("aria-hidden")
+    modale.setAttribute("aria-modal", "true")
+    
+    modale.addEventListener("click", closeModal)
+    modale.querySelector(".js-close-modal").addEventListener("click", closeModal)
+    modale.querySelector(".js-close-stop").addEventListener("click", stopPropagation)
 
     displayWorksFirstModal();
 }
@@ -238,7 +302,7 @@ const openModal = function (e) {
 
 const closeModal = function (e) {
     if (modal === null) return
-    e.preventDefault()
+    // e.preventDefault() // ! Cette ligne engendrait le TypeError: Cannot read properties of undefined (reading 'preventDefault')
     modal.style.display = "none";
     modal.setAttribute("aria-hidden", "true")
     modal.removeAttribute("aria-modal")
@@ -328,16 +392,14 @@ function deleteWork(id) {
     .catch(error => alert("Erreur : " + error));
 };
 
+
 // * MODALE N°2
 // > Fonction pour ouvrir la 2ème modale (ajout d'un projet)
 
 const btnAddPhoto = document.querySelector(".add-photo");
 btnAddPhoto.addEventListener("click", openAddModal);
 
-function openAddModal (event) {
-    if (event) {
-    event.preventDefault();
-    }
+function openAddModal () {
         // Cacher la première modale et faire apparaître la seconde
         firstModal.style.display = "none";
         addModal.style.display = "flex";
