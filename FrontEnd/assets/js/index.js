@@ -1,37 +1,50 @@
-// > VARIABLES
+//> VARIABLES
 
-const gallery = document.querySelector(".gallery");
 let works = [];
 let categories = [];
-let createWorksCalled = false; //Variable qui suit l'etat de createWorks()
+
+//Variable qui suit l'état de createWorks()
+let createWorksCalled = false; 
+
+//> VARIABLES PAGE .INDEX
+// Bouton de connexion/déconnexion de la page .index
+const switchLogout = document.querySelector('li a[href="login.html"]');
+// Header de la page .index
+const header = document.querySelector("header");
+// h2 présent dans la div avec l'id "Portfolio"
+const titlemyProjets = document.querySelector("#portfolio h2");
+// Gallerie de la page .index
+const gallery = document.querySelector(".gallery");
+
+//> VARIABLES MODALE N°1
+// 1ère modale
+const firstModal = document.querySelector(".modal-deleted");
+// Gallerie présente dans la 1ère modale
 const ModalContentGallery = document.querySelector(".gallery-list");
+// Message qui valide la suppression d'un projet
 const messagePhotoDeleted = document.querySelector(".message-deleted");
 
-const firstModal = document.querySelector(".modal-deleted");
+//> VARIABLES MODALE N°2
+// 2ème modale
 const addModal = document.querySelector(".modal-add");
-
+// Bouton "valider" de la 2ème modale
 const btnValidAddModal = document.getElementById("btn-valid");
+// Formulaire d'ajout d'un projet de la 2ème modale
 const formPhoto = document.querySelector(".form-photo");
-
+// Bouton "+ Ajouter une photo" de la 2ème modale
 const btnAddFile = document.getElementById("file");
+// Champ "Titre" du formulaire de la 2ème modale
 const titleAddModal = document.getElementById("title-photo");
+// Champ "Catégorie" du formulaire de la 2ème modale
 const categorieAddModal = document.getElementById("categorie-photo");
-
+// Div de preview de la photo chargée dans la 2ème modale
 const previewNewPhoto = document.querySelector(".preview");
-/**Access to photo  add content */
+// Champ d'ajout de la photo de la 2ème modale
 const contentAddPhoto = document.querySelector(".content-add-photo");
 
-const switchLogout = document.querySelector('li a[href="login.html"]');
-const header = document.querySelector("header");
-const titlemyProjets = document.querySelector("#portfolio h2");
 
 
-
-
-
-
-
-// > Récupérer de manière dynamique les projets
+//> Récupérer de manière dynamique les projets
 
 fetch("http://localhost:5678/api/works")
     .then(response => {
@@ -42,11 +55,12 @@ fetch("http://localhost:5678/api/works")
     })
     .then(galleryData => {
         works = galleryData;
-        createWorks(); //Appele ici pour afficher les travaux initiaux sans tri
+        //Appele ici de createWorks() pour afficher les travaux initiaux sans tri
+        createWorks(); 
     })
     .catch(error => alert("Erreur : " + error))
 
-// > Récupérer de manière dynamique les catégories
+//> Récupérer de manière dynamique les catégories
 
 fetch("http://localhost:5678/api/categories")
     .then(response => {
@@ -62,29 +76,37 @@ fetch("http://localhost:5678/api/categories")
     })
     .catch(error => alert("Erreur : " + error))
 
-// * GALLERIE
-// > Fonction pour créer un nouveau projet
+
+
+
+//* GALLERIE
+//> Fonction pour créer un nouveau projet
 
 function createWorks(categoryId = 0) {
 
-    //Filtrer les categories des projets
+    //Filtrer les catégories des projets
     const displayWorks = categoryId ? works.filter(work => work.categoryId === categoryId) : works;
     console.log("Projets affichés après filtrage :", displayWorks);
+
     //Vider la galerie avant d'ajouter les nouveaux projets
     gallery.innerHTML = "";
 
-    //Ajouter des elements pour chaque projet filtre
+    //Ajouter des éléments pour chaque projet filtré
     displayWorks.forEach(work => {
+
         // Créer une div pour chaque work, chaque div contient un id stipulant le n° de projet "work-n°"
         const workDiv = document.createElement("div");
         workDiv.setAttribute("id", `work-${work.id}`);
+
         // Créer un élément img pour afficher l'image du projet
         const workImg = document.createElement("img");
         workImg.src = work.imageUrl;
         workImg.setAttribute("alt", work.title);
+
         // Créer un élément <caption> pour afficher le titre du projet
         const workTitle = document.createElement("caption");
         workTitle.innerText = work.title;
+
         // Ajouter les éléments à la galerie. Des div dans .gallery, work.img et work.title dans la div
         gallery.appendChild(workDiv);
         workDiv.appendChild(workImg);
@@ -94,31 +116,40 @@ function createWorks(categoryId = 0) {
     // Afficher uniquement les projets filtrés
     displayWorks.forEach(work => {
         const workDiv = document.getElementById(`work-${work.id}`);
-        workDiv.style.display = ''; // Réinitialiser l'affichage pour les projets filtrés
+
+        // Réinitialiser l'affichage pour les projets filtrés
+        workDiv.style.display = ''; 
     });
 }
 
-// * FILTRES
-// > Ajouter des catégories de filtre pour filtrer les projets
+
+
+
+//* FILTRES
+//> Ajouter des catégories de filtre pour filtrer les projets
 
 function createFilter() {
-    //Ajouter une categorie par defaut
+
+    //Ajouter une catégorie par défaut
     categories.unshift({ id: 0, name: "Tous" });
 
-    //Creer une div pour les categories
+    //Créer une div pour les catégories
     const categoriesFilter = document.createElement("div");
     categoriesFilter.classList.add("categories");
-    //Placer la div "categories" qu'on vient de creer avant la div .gallery
+
+    //Placer la div "categories" qu'on vient de créer avant la div .gallery
     portfolio.insertBefore(categoriesFilter, gallery);
 
-    //Ajouter les 3 autres categories
+    //Ajouter les 3 autres catégories
     categories.forEach((categoryElement, i) => {
-        //Creer un bouton par categorie
+
+        //Créer un bouton par catégorie
         const categoryFilterButton = document.createElement("button");
         categoryFilterButton.innerText = categoryElement.name;
         categoryFilterButton.value = categoryElement.id;
         categoryFilterButton.classList.add("btn-category");
-        //Ajouter une class au premier bouton
+
+        //Ajouter une classe au premier bouton
         if (i === 0) {
             categoryFilterButton.classList.add("category-selected")
         };
@@ -126,15 +157,16 @@ function createFilter() {
         //Ajouter des boutons dans la div des filtres
         categoriesFilter.appendChild(categoryFilterButton);
 
-        // Changer de categorie en fonction du clic de l'utilisateur
+        // Changer de catégorie en fonction du clic de l'utilisateur
         categoryFilterButton.addEventListener("click", (e) => {
-            // Sortir l'ID de la categorie selectionnee
+
+            // Sortir l'ID de la catégorie sélectionnée
             const selectedCategoryId = parseInt(e.target.value);
 
-            // Appeler createWorks() avec la nouvelle categorie selectionnee
+            // Appeler createWorks() avec la nouvelle catégorie sélectionnée
             createWorks(selectedCategoryId);
 
-            // Réinitialiser createWorksCalled pour permettre la sélection d'un autre filtre
+            // Réinitialiser createWorksCalled() pour permettre la sélection d'un autre filtre
             createWorksCalled = false;
 
             // Changer la couleur des boutons
@@ -142,19 +174,25 @@ function createFilter() {
             filterCategoryButtons.forEach((filterButton) => {
                 filterButton.classList.remove("category-selected");
             });
-            // Ajouter la classe de selection au bouton clique
+
+            // Ajouter la classe de sélection au bouton cliqué
             e.target.classList.add("category-selected");
         });
     });
 };
 
-// todo TEST ADMIN MODE
 
-/**Function to enable administrator mode */
+
+
+//* ADMIN MODE
+//> Fonction pour activer le mode admin
+
 function adminMode(){
-    /**Check if a token is present in the sessionStorage */
+
+    // Vérifier qu'un token est bien stocké dans le stockage de session
     if(sessionStorage.getItem("token")){
-        /**Create <div> edit mode content and insert at the beginning of the header */
+
+        // Créer une <div> "mode édition" à ajouter au début du header
         const editModeBar = `<div class="edit-mode">
         <i class="logo-edit fa-regular fa-pen-to-square"></i>
         <p>Mode édition</p>
@@ -162,117 +200,148 @@ function adminMode(){
         header.style.marginTop = "88px";
         header.insertAdjacentHTML("afterbegin", editModeBar);
         
-        /**change login text to switchLogout text */
+        // Changer le texte "login" pour celui de "switchLogout"
         switchLogout.textContent = "logout";
         switchLogout.href = "#";
         
         switchLogout.addEventListener("click", () => {
-            /**Delete the session token and reload the page */
+
+            // Supprimer le token de la session et recharger la page
             sessionStorage.removeItem("token");
             location.reload();
         });
-        /**Create a <div> container for toModified and title "Mes Projets"  */
+
+        // Créer une <div> pour modifier les projets avec le picto
         const containerDivBtn = document.createElement("div");
         containerDivBtn.classList.add("edit-projets");
-        /**Create the <di> link to edit projects */
+
+        // Créer la <div> avec lien de la 1ère modale
         const btnToModified = `<div class="edit">
         <i class="fa-regular fa-pen-to-square"></i>
         <p>modifier</p>
         </div>`;
 
-        /**Insert container before first portfolio item and move projects inside */
+        // Insérer le container avant le 1er élément du portfolio et déplacer les projets à l'intérieur
         portfolio.insertBefore(containerDivBtn, portfolio.firstChild);
         containerDivBtn.appendChild(titlemyProjets);
-        /**Insert edit link after projects */
+
+        // Ajouter le lien de modification après "Mes Projets"
         titlemyProjets.insertAdjacentHTML("afterend", btnToModified);
 
         
-        /**Hide category buttons */
+        // Cacher les boutons de filtres 
         const categoriesButtonsFilter = document.querySelectorAll('.category-btn');
         categoriesButtonsFilter.forEach(button => {
             button.style.display = 'none';
         });
 
-        /**Acces to "modifier" */
+        // Accès au bouton "Modifier"
         const editBtn = document.querySelector(".edit");
         if (editBtn) {
-            /**If the element is found, add an event listener for the click */
+
+            // Si l'élément est trouvé, ajouter un eventListener au click
             editBtn.addEventListener("click", openModal);
         };
     };
 };
 
-// todo FIN TEST ADMIN MODE
 
-// > Promesse pour attendre la création des catégories avant de masquer les éléments
+
+
+//> Promesse pour attendre la création des catégories avant de masquer les éléments
 
 function waitForCategories() {
     return new Promise((resolve, reject) => {
         const interval = setInterval(() => {
+
+            // Vérifie que les boutons de filtres par catégories sont bien présents
             if (document.querySelector(".categories")) {
+
+                // Si l'élément est trouvé, l'exécution de l'intervalle se termine
                 clearInterval(interval);
+
+                // Si la promesse est résolue, "resolve()" est appelée
                 resolve();
             }
+
+            // Intervalle défini pour s'exécuter toutes les 100 millisecondes
         }, 100);
     });
 }
 
-// * UTILISATEUR CONNECTÉ
-// > Conditions pour afficher ou masquer des éléments lorsque l'utilisateur est connecté
 
+
+
+//* UTILISATEUR CONNECTÉ
+//> Conditions pour afficher ou masquer des éléments lorsque l'utilisateur est connecté
+
+// EventListener pour vérifier que le .html soit entièrement chargé
 document.addEventListener("DOMContentLoaded", async () => {
-    //Verifier que le token est bien stocke dans sessionStorage
+
     const token = sessionStorage.getItem("token");
     const loginLink = document.getElementById("loginLink");
 
+    // Si l'utilisateur est connecté
     if (token) {
-        //L'utilisateur est donc connecte ici
         const editModeElements = document.querySelectorAll(".edit-mode");
         editModeElements.forEach(element => {
+
+            // On affiche les éléments .edit-mode (barre noire du header)
             element.style.display = "flex";
         });
 
         const editWorksElements = document.querySelectorAll(".edit-works");
         editWorksElements.forEach(element => {
+
+            // On affiche les éléments .edit-works (bouton "modifier")
             element.style.display = "flex";
         });
 
-        //Changer le bouton login en logout
+        // Changer le bouton login en logout
         loginLink.innerText = "logout";
 
-        //Attendre la creation des categories avant de masquer les elements
+        // Attendre la création des catégories avant de masquer les éléments
         await waitForCategories();
 
         const categoriesElements = document.querySelectorAll(".categories");
         categoriesElements.forEach(element => {
+
+            // Masquer les boutons de tri par filtres
             element.style.display = "none";
         });
+
     } else {
         loginLink.innerText = "login";
     }
 
+    // EventListener pour vérifier que le .html soit entièrement chargé
     document.addEventListener("DOMContentLoaded", () => {
         const token = sessionStorage.getItem("token");
         const loginLink = document.getElementById("loginLink");
 
+        // Si l'utilisateur est connecté
         if (token) {
-            // Utilisateur connecte
+
+            // On rajoute un lien au bouton "modifier" que l'on a ajouté (.edit-works)
             const logoutLink = document.createElement("a");
             logoutLink.innerText = "logout";
             logoutLink.href = "javascript:void(0);";
             logoutLink.addEventListener("click", () => {
-                // Deconnexion : Supprime le token du sessionStorage
+
+                // Déconnexion : Supprime le token du sessionStorage
                 sessionStorage.removeItem("token");
-                // Rediriger vers la page de connexion
+
+                // Redirige vers la page de connexion
                 location.href = "login.html";
             });
 
             // Remplacer le lien "login" par "logout"
             loginLink.parentNode.replaceChild(logoutLink, loginLink);
+
+        // Utilisateur non connecté
         } else {
-            // Utilisateur non connecté
             loginLink.innerText = "login";
-            loginLink.href = "login.html"; // Rediriger vers la page de connexion
+            loginLink.href = "login.html";
         }
     });
 
@@ -280,8 +349,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 let modal = null
 
-// * MODALE N°1
-// > Fonction pour ouvrir la 1ère modale
+
+
+
+//* MODALE N°1
+//> Fonction pour ouvrir la 1ère modale
 
 const openModal = function (e) {
     e.preventDefault()
@@ -301,15 +373,15 @@ const openModal = function (e) {
 // > Fonction pour fermer la 1ère modale
 
 const closeModal = function (e) {
-    if (modal === null) return
+    if (modale === null) return
     // e.preventDefault() // ! Cette ligne engendrait le TypeError: Cannot read properties of undefined (reading 'preventDefault')
-    modal.style.display = "none";
-    modal.setAttribute("aria-hidden", "true")
-    modal.removeAttribute("aria-modal")
-    modal.removeEventListener("click", closeModal)
-    modal.querySelector(".js-close-modal").removeEventListener("click", closeModal)
-    modal.querySelector(".js-close-stop").removeEventListener("click", stopPropagation)
-    modal = null
+    modale.style.display = "none";
+    modale.setAttribute("aria-hidden", "true")
+    modale.removeAttribute("aria-modal")
+    modale.removeEventListener("click", closeModal)
+    modale.querySelector(".js-close-modal").removeEventListener("click", closeModal)
+    modale.querySelector(".js-close-stop").removeEventListener("click", stopPropagation)
+    modale = null
     // Appel de al fonction qui reinitialise les photos dans l'ajout 
     resetAddModal();
 }
@@ -358,7 +430,7 @@ function displayWorksFirstModal() {
 // * SUPPRESSION WORK
 // > Fonction pour supprimer un projet
 
-function deleteWork(id) {
+async function deleteWork(id) {
     fetch(`http://localhost:5678/api/works/${id}`, {
         method: "DELETE",
         headers: {
@@ -382,9 +454,9 @@ function deleteWork(id) {
         
         // Afficher le message pendatn 1.5 secondes
         messagePhotoDeleted.style.display="flex";
-        setTimeout(()=>{
-            messagePhotoDeleted.style.display="none";
-        }, 1500);
+        // setTimeout(()=>{
+        //     messagePhotoDeleted.style.display="none";
+        // }, 1500);
 
         // Supprimer l'image de la gallery
         createWorks();
@@ -563,7 +635,7 @@ function postNewPhoto () {
         /**Updating the gallery and closing the modal */
         works.push(galleryData);
         createWorks();
-        closeModal();
+        closeModal(null);
     })
     .catch(error => alert("Erreur : " + error));
 };
