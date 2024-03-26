@@ -446,17 +446,16 @@ async function deleteWork(id) {
         }
     })
     .then(() => {
-        
         works = works.filter(work => work.id !== id);
 
         // Supprimer l'image de la modale
         displayWorksFirstModal();
         
-        // Afficher le message pendatn 1.5 secondes
+        // Afficher le message pendant 1.5 secondes
         messagePhotoDeleted.style.display="flex";
-        // setTimeout(()=>{
-        //     messagePhotoDeleted.style.display="none";
-        // }, 1500);
+        setTimeout(()=>{
+            messagePhotoDeleted.style.display="none";
+        }, 1500);
 
         // Supprimer l'image de la gallery
         createWorks();
@@ -598,25 +597,24 @@ function resetAddModal () {
 };
 
 
-        /**POST API */
 
-/**Function to POST a photo to the API */
+//> Fonction pour envoyer la photo à l'API
 function postNewPhoto () {
-    /**Creating a formData object to send form data to the add modal */
+    // Créer l'objet formData pour envoyer le formulaire à la 2ème modale
     const formData = new FormData();
 
-    /**Adding values ​​to formData */
+    // Ajouter les valeurs au formData
     formData.append("title", titleAddModal.value);
     formData.append("category", categorieAddModal.value);
     formData.append("image", btnAddFile.files[0])
 
     // console.log("Données envoyées:", {
-    //     title: titleAddModal.value,
-    //     category : categorieAddModal.value,
-    //     image: btnAddFile.files[0]
-    // });
+        // title: titleAddModal.value,
+        // category : categorieAddModal.value,
+        // image: btnAddFile.files[0]
+        // });
 
-    /**Sending to the API */
+    // Envoyer à l'API
     fetch("http://localhost:5678/api/works", {
         method: "POST", 
         headers: {
@@ -632,7 +630,7 @@ function postNewPhoto () {
 
     })
     .then((galleryData) => {
-        /**Updating the gallery and closing the modal */
+        // Mise à jour de la gallerie et fermeture de la modale
         works.push(galleryData);
         createWorks();
         closeModal(null);
@@ -640,22 +638,18 @@ function postNewPhoto () {
     .catch(error => alert("Erreur : " + error));
 };
 
-/* ****************************** */
-/* DECLARATION OF EVENT LISTENERS */
-/* ****************************** */
+//* LES EVENTLISTENER
 
-/**EventListener for sending the new form */
+// EventListener pour envoyer le nouveau formulaire
 formPhoto.addEventListener("submit", function (e) {
     e.preventDefault();
     postNewPhoto();
 });
 
-/**EventListener to recover the photo from the computer files */
+// EventListener pour récupérer la photo des fichiers de l'ordinateur
 btnAddFile.addEventListener("change", getNewPhoto);
 
-/**EventListener to disable the validation button of the add modal */
+// EventListener pour désactiver le bouton de validation de la 2ème modale
 titleAddModal.addEventListener("input", toggleSubmitBtn);
 categorieAddModal.addEventListener("input", toggleSubmitBtn);
 btnAddFile.addEventListener("change", toggleSubmitBtn);
-
-/***************************************************************************** */
