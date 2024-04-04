@@ -3,9 +3,6 @@
 let works = [];
 let categories = [];
 
-//Variable qui suit l'état de createWorks()
-let createWorksCalled = false; 
-
 //> VARIABLES PAGE .INDEX
 // Bouton de connexion/déconnexion de la page .index
 const switchLogout = document.querySelector('li a[href="login.html"]');
@@ -122,9 +119,6 @@ function createWorks(categoryId = 0) {
     });
 }
 
-
-
-
 //* FILTRES
 //> Ajouter des catégories de filtre pour filtrer les projets
 
@@ -166,9 +160,6 @@ function createFilter() {
             // Appeler createWorks() avec la nouvelle catégorie sélectionnée
             createWorks(selectedCategoryId);
 
-            // Réinitialiser createWorksCalled() pour permettre la sélection d'un autre filtre
-            createWorksCalled = false;
-
             // Changer la couleur des boutons
             const filterCategoryButtons = document.querySelectorAll(".btn-category");
             filterCategoryButtons.forEach((filterButton) => {
@@ -180,8 +171,6 @@ function createFilter() {
         });
     });
 };
-
-
 
 
 //* ADMIN MODE
