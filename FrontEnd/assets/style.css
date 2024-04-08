@@ -428,6 +428,7 @@ font-size: 15px;
 
 .message-deleted {
 	display: none;
+	text-align: center;
 }
 
 .title-modal {
@@ -724,4 +725,8 @@ footer nav ul {
 
 .modal-deleted {
 	display: flex;
+}
+
+.close-add {
+	cursor: pointer;
 }
