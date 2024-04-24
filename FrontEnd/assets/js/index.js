@@ -76,7 +76,7 @@ fetch("http://localhost:5678/api/categories")
 
 
 
-//* GALLERIE
+//* GALERIE
 //> Fonction pour créer un nouveau projet
 
 function createWorks(categoryId = 0) {
